@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server');
 
-const foodList = [
+let foodList = [
 	{
 		dessert: 'Oreo',
 		nutritionInfo: {
@@ -21,32 +21,62 @@ const foodList = [
 	},
 ];
 
+const addFood = (dessert, calories, fat, carb, protein) => {
+	const newFood = { dessert, nutritionInfo: { calories, fat, carb, protein } };
+	foodList = [...foodList, newFood];
+	return { ...newFood };
+};
+
+const getFoodList = () => {
+	return foodList;
+};
+
 const typeDefs = gql`
 	type Food {
 		dessert: String
 		nutritionInfo: Nutrition
-    }
-    
-    type Nutrition {
-        calories: Int,
-        fat: Int,
-        carb: Int,
-        protein: Int
-    }
+	}
+
+	type Nutrition {
+		calories: String
+		fat: String
+		carb: String
+		protein: String
+	}
 
 	type Query {
 		foodList: [Food]
+	}
+
+	input AddFoodInput {
+		dessert: String
+		calories: String
+		fat: String
+		carb: String
+		protein: String
+	}
+
+	type Mutation {
+		addFood(dessert: String, calories: String, fat: String, carb: String, protein: String): Food
 	}
 `;
 
 const resolvers = {
 	Query: {
-		foodList: () => foodList,
+		foodList: () => getFoodList(),
+	},
+	Mutation: {
+		addFood: (parent, args) => {
+			// console.log('im here');
+			// console.log(args);
+			const { dessert, calories, fat, carb, protein } = args;
+			return addFood(dessert, calories, fat, carb, protein);
+		},
 	},
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
 server.listen().then(({ url }) => {
-	console.log(`🚀  Server ready at ${url}`);
+	console.log(`Server ready at ${url}`);
 });

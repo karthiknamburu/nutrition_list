@@ -15,5 +15,19 @@ const GET_NUTRITION_LIST = gql`
   }
 `;
 
+const ADD_FOOD = gql`
+  mutation AddFood($dessert: String!, $protein: String, $fat: String, $carb: String, $calories: String) {
+    addFood(dessert: $dessert, protein: $protein, fat: $fat, carb: $carb, calories: $calories) {
+      dessert,
+      nutritionInfo{
+        protein
+        fat
+        carb
+        calories
+      }
+    }
+  }
+`;
 
-export { GET_NUTRITION_LIST };
+
+export { GET_NUTRITION_LIST, ADD_FOOD };

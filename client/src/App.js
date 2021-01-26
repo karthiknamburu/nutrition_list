@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 
+import AddFood from './AddFood/AddFood';
+import Button from './button/Button';
 import Table from './Table/Table';
 import './App.css';
 
@@ -11,16 +14,27 @@ const client = new ApolloClient({
 });
 
 function App() {
+	const [showAdd, setShowAdd] = useState(false);
+
 	return (
 		<ApolloProvider client={client}>
-			<section class='bg-light-gray'>
-				<header className='tc pv4 pv5-ns'>
-					<h1 className='f5 f4-ns fw6 mid-gray'>Jasper Whitehouse</h1>
-				</header>
-				<Table />
-			</section>
+			<div>
+				<section class='bg-light-gray'>
+					<div class='cf ph2-ns'>
+						<div class='fl w-100 w-20-ns pa2'></div>
+						<div class='fl w-100 w-40-ns pa2'>
+							<h1 className='f5 f4-ns fw6 mid-gray'>Nutrition List</h1>
+						</div>
+						<div class='fl w-100 w-40-ns pa2'>
+							<Button inline onClick={() => setShowAdd(!showAdd)}>
+								Add Item
+							</Button>
+						</div>
+					</div>
+				</section>
+				{showAdd ? <AddFood /> : <Table />}
+			</div>
 		</ApolloProvider>
-
 	);
 }
 
